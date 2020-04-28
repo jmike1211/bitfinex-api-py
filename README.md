@@ -3,7 +3,7 @@
 ![https://api.travis-ci.org/bitfinexcom/bitfinex-api-py.svg?branch=master](https://api.travis-ci.org/bitfinexcom/bitfinex-api-py.svg?branch=master)
 
 A Python reference implementation of the Bitfinex API for both REST and websocket interaction.
-
+python 3.7.3
 # Features
 - Official implementation
 - Websocket V2 and Rest V2
