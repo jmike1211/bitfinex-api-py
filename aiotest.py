@@ -18,18 +18,17 @@ API_SECRET=""
 @dp.message_handler(commands=['createfunding'])
 async def create_funding(message: types.Message):
 
-    API_KEY=""
-    API_SECRET=""
     bfx = Client(
       API_KEY=API_KEY,
       API_SECRET=API_SECRET,
       logLevel='INFO'
     )
-    response = await bfx.rest.submit_funding_offer("fUSD", 100, 0.00042, 3)
-    # response is in the form of a Notification object
-    # notify_info is in the form of a FundingOffer
+    try:
+        response = await bfx.rest.submit_funding_offer("fUSD", 100, 0.00042, 3)
+    except Exception as Argument:
+        response = Argument
     print ("Offer: ", response)
-
+    await message.reply(response)
 
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
