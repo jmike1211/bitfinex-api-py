@@ -10,6 +10,7 @@ import asyncio
 import functools
 
 from bfxapi import Client
+from bfxmongo import useMongo
 
 bfx = Client(
   logLevel='DEBUG',
@@ -20,9 +21,9 @@ tbot = telegram.Bot(token)
 
 def SendMessage(text):
     try:
-        tbot.sendMessage("@your telegram group",text)
+        tbot.sendMessage("@binfmiketest",text)
     except:
-        tbot.sendMessage("@your telegram group",text)
+        tbot.sendMessage("@binfmiketest",text)
 
 async def return_frr():
     ticker = await bfx.rest.get_public_ticker('fUSD')
@@ -39,8 +40,15 @@ async def return_frr():
         ticker[11],
         last_price,
         ticker[9])
+    mongoResult = {}
+    mongoResult["frr"] = round(ticker[0],5)
+    mongoResult["hask"] = round(ticker[11],5)
+    mongoResult["lprice"] = round(ticker[9],5)
+    
+    useMongo().mongoupdateone({},mongoResult,"frrrate")
     SendMessage(result)
-
+    if float(ticker[0]) > float(0.00055):
+        SendMessage("crazy mode!!! frr more than 20%(0.00055)!!!")
 async def run():
     await return_frr()
 """
@@ -51,5 +59,5 @@ print(t)
 while True:
     t = asyncio.ensure_future(run())
     asyncio.get_event_loop().run_until_complete(t)
-
-    time.sleep(900)	
+    print("start funding")
+    time.sleep(1200)	
