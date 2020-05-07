@@ -216,7 +216,8 @@ class BfxRest:
         """
         endpoint = "auth/r/wallets"
         raw_wallets = await self.post(endpoint)
-        return [Wallet(*rw[:4]) for rw in raw_wallets]
+        return raw_wallets
+        #return [Wallet(*rw[:4]) for rw in raw_wallets]
 
     async def get_active_orders(self, symbol):
         """
@@ -346,7 +347,8 @@ class BfxRest:
     async def get_funding_credits(self, symbol):
         endpoint = "auth/r/funding/credits/{}".format(symbol)
         credits = await self.post(endpoint)
-        return [FundingCredit.from_raw_credit(c) for c in credits]
+        return credits
+        #return [FundingCredit.from_raw_credit(c) for c in credits]
 
     async def get_funding_credit_history(self, symbol, start, end, limit=25):
         """
@@ -399,6 +401,17 @@ class BfxRest:
         """
         endpoint = "auth/w/funding/offer/cancel"
         raw_notification = await self.post(endpoint,  { 'id': fundingId })
+        return Notification.from_raw_notification(raw_notification)
+
+    async def submit_cancel_funding_offer_all(self, fundingCurrency):
+        """
+        Cancel a funding offer
+
+        # Attributes
+        @param fundingId int: the id of the funding offer
+        """
+        endpoint = "auth/w/funding/offer/cancel/all"
+        raw_notification = await self.post(endpoint,  { 'currency': fundingCurrency })
         return Notification.from_raw_notification(raw_notification)
 
     async def submit_wallet_transfer(self, from_wallet, to_wallet, from_currency, to_currency, amount):
