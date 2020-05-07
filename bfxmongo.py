@@ -1,52 +1,38 @@
 import pymongo
+import os
+import sys
 
 
 class useMongo():
     def __init__(self):
-        self.client = pymongo.MongoClient("mongodb+srv:<client>")        
+        self.client = pymongo.MongoClient("")        
         self.db = self.client['bfxtest']
-        self.collection = self.db['account']
 
-    def mongofindone(self, token):
-        result = self.collection.find_one(token)
+    def mongofindone(self, token={}, collectionName="account"):
+        collection = self.db[collectionName]
+        result = collection.find_one(token)
         return result
 
-    def mongofind(self, token):
-        result = self.collection.find(token)
+    def mongofindall(self, token, collectionName="account"):
+        collection = self.db[collectionName]
+        result = collection.find(token)
         return result
 
-    def mongoinsert(self, token):
-        result = self.collection.insert(token)
+    def mongoinsertone(self, token, collectionName="account"):
+        collection = self.db[collectionName]
+        result = collection.insert_one(token)
         return result
 
-    def mongodelone(self, token):
-        result = self.collection.delete_one(token)
+    def mongodeleteone(self, token, collectionName="account"):
+        collection = self.db[collectionName]
+        result = collection.delete_one(token)
         return result
 
+    def mongoupdateone(self, origintoken, changetoken, collectionName="account"):
+        collection = self.db[collectionName]
+        modify = collection.find_one(origintoken)
+        print(modify)
+        #modify[changename] = changetoken
+        result = collection.update_one(origintoken, {'$set': changetoken})
+        return result
 
-"""
-result = useMongo().mongodelone({"id" : "20170101"})
-print(result)
-
-student = {
-    'id': '20110101',
-    'name': 'bike',
-    'age': 23,
-    'gender': 'male'
-}
-
-#useMongo().mongoinsert(student)
-
-result = useMongo().mongofindone({"age" :{'$gt': 20}})
-print(result)
-if result == None:
-    print("aaaaa")
-else:
-    print(result["gender"])
-
-
-results = useMongo().mongofind({"age" :{'$gt': 20}})
-print(results)
-for i in results:
-    print(i)
-"""
