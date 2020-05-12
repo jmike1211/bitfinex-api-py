@@ -6,7 +6,6 @@ from config import Config
 
 class useMongo():
     def __init__(self):
-        #self.client = pymongo.MongoClient("mongodb+srv://bfxtest:bfxtest@bitfinextest-blkxg.mongodb.net/test?retryWrites=true&w=majority")        
         self.client = pymongo.MongoClient(Config.config()["mongoConnect"])        
         self.db = self.client['bfxtest']
 
