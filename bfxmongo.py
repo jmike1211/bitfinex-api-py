@@ -48,18 +48,6 @@ class useMongo():
 #result = useMongo().mongodelone({"id" : "20170101"})
 #print(result)
 """
-mongoResult = {}
-mongoResult["lprice"] = round(0.00002,5)
-
-result = useMongo().mongoupsertone({},mongoResult,"testte")
-print(result)
-print(result.matched_count, result.modified_count)
-
-param = {
-    'frr': '0.00041',
-}
-
-useMongo().mongoinsertone(param, "frrrate")
 
 result = useMongo().mongofindone({},"frrrate")
 print(result)
@@ -67,12 +55,6 @@ if result == None:
     print("aaaaa")
 else:
     print(result["frr"])
-
-
-results = useMongo().mongofind({"age" :{'$gt': 20}})
-print(results)
-for i in results:
-    print(i)
 
 mongoResult = {}
 mongoResult["frr"] = round(0.000325613,5)

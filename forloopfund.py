@@ -7,6 +7,7 @@ import functools
 from bfxapi import Client
 from bfxmongo import useMongo
 from config import Config 
+from calfundingrate import calRate
 
 sys.path.append('bfxapi')
 from models import FundingCreditModel
@@ -69,12 +70,13 @@ async def run():
     if amount < 50:
         print("balance not enough")
         return
-    if frrRate > 0.00055:
-        days = 30
-        await create_funding(amount, frrRate, days)
-    else:
-        await create_funding(amount, frrRate)
-   
+    #if frrRate > 0.00055:
+        #days = 30
+        #await create_funding(amount, frrRate, days)
+    #else:
+        #await create_funding(amount, frrRate)
+    frrRate, days = calRate.fundingRate()
+    await create_funding(amount, frrRate, days)
 while True:
     t = asyncio.ensure_future(run())
     asyncio.get_event_loop().run_until_complete(t)

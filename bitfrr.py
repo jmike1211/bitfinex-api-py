@@ -32,18 +32,20 @@ async def return_frr():
     print ("Ticker:")
     print (ticker)
     mul_frr = ticker[0]*365
-    high_ask = ticker[11]*365
+    day_high = ticker[11]*365
     last_price= ticker[9]*365
     result = 'frr percent: {:.2%}({:.5f}), high ask:{:.2%}({:.5f}),last price:{:.2%}({:.5f})'.format(
         mul_frr,
         ticker[0],
-        high_ask,
+        day_high,
         ticker[11],
         last_price,
         ticker[9])
     mongoResult = {}
     mongoResult["frr"] = round(ticker[0],5)
-    mongoResult["hask"] = round(ticker[11],5)
+    mongoResult["ask"] = round(ticker[4],5)
+    mongoResult["dayhigh"] = round(ticker[11],5)
+    mongoResult["daylow"] = round(ticker[12],5)
     mongoResult["lprice"] = round(ticker[9],5)
     
     useMongo().mongoupdateone({},mongoResult,"frrrate")
