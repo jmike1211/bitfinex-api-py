@@ -11,12 +11,13 @@ import functools
 
 from bfxapi import Client
 from bfxmongo import useMongo
+from config import Config
 
 bfx = Client(
   logLevel='DEBUG',
 )
 
-token = ""
+token = Config.config()["frrBottoken"]
 tbot = telegram.Bot(token)
 
 def SendMessage(text):

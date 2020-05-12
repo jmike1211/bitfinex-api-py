@@ -10,32 +10,14 @@ import asyncio
 import functools
 
 from bfxapi import Client
+from bfxmongo import useMongo
+from config import Config
 
-token = ""
+token = Config.config()["apiBottoken"]
 updater = Updater(token, use_context=True)
 
-API_KEY=""
-API_SECRET=""
-
-@run_async
-async def create_funding():
-
-    API_KEY=""
-    API_SECRET=""
-    print(API_KEY)
-    bfx = Client(
-      API_KEY=API_KEY,
-      API_SECRET=API_SECRET,
-      logLevel='INFO'
-    )
-    print("222") 
-    response = await bfx.rest.submit_funding_offer("fUSD", 100, 0.0005, 2)
-    # response is in the form of a Notification object
-    # notify_info is in the form of a FundingOffer
-    print ("Offer: ", response)
-
-
 def getYourInformation(update,context):
+
     #update.message.reply_text('發送人 first name, {}'.format(update.message.from_user.first_name))
     #update.message.reply_text('發送人 last name, {}'.format(update.message.from_user.last_name))
     #update.message.reply_text('發送人 full name:, {}'.format(update.message.from_user.full_name))
@@ -51,12 +33,21 @@ def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
 def echo(update, context):
+    if len(update.message.text[7:]) != 43:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="length wrong")
+        return 
     if ("addkey:" in update.message.text):
         API_KEY= update.message.text[7:]
+        mongoResult = {"user_id":update.message.from_user.id,"API_KEY":update.message.text[7:]}
+        useMongo().mongoupsertone({"user_id":update.message.from_user.id},mongoResult)
         result = "your key is :" + API_KEY[0:4] + " ... " + API_KEY[-4:]
         context.bot.deleteMessage(chat_id=update.effective_chat.id,message_id=update.message.message_id)
     elif ("addsec:" in update.message.text):
-        result = update.message.text[7:]          
+        API_SEC= update.message.text[7:]
+        mongoResult = {"user_id":update.message.from_user.id,"API_SEC":update.message.text[7:]}
+        useMongo().mongoupsertone({"user_id":update.message.from_user.id},mongoResult)
+        result = "your sec is :" + API_SEC[0:4] + " ... " + API_SEC[-4:]
+        context.bot.deleteMessage(chat_id=update.effective_chat.id,message_id=update.message.message_id) 
     else:
         result = "no rule"
     context.bot.send_message(chat_id=update.effective_chat.id, text=result)
@@ -64,8 +55,7 @@ def echo(update, context):
 
 updater.dispatcher.add_handler(CommandHandler('start', start))
 updater.dispatcher.add_handler(MessageHandler(Filters.text & (~Filters.command), echo))
-# 套用 getYourInformation()，當你對你的機器人說 '/meInfo'，就會執行這串
+
 updater.dispatcher.add_handler(CommandHandler('meInfo', getYourInformation))
 
-# 這串是執行機器人算是一個運行server?很類似 我是這樣覺得
 updater.start_polling()

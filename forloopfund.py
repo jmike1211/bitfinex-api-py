@@ -6,12 +6,14 @@ import functools
 
 from bfxapi import Client
 from bfxmongo import useMongo
+from config import Config 
 
 sys.path.append('bfxapi')
 from models import FundingCreditModel
 
-API_KEY=""
-API_SECRET=""
+
+API_KEY = Config.config()["bfxKey"]
+API_SECRET = Config.config()["bfxSec"]
 bfx = Client(
     API_KEY=API_KEY,
     API_SECRET=API_SECRET,
@@ -42,7 +44,7 @@ async def log_wallets():
     wallets = await bfx.rest.get_wallets()
     for w in wallets:
         if w[0] == "funding" and w[1] == "USD":
-            return w[2]i#only catch USD balance
+            return w[2]#only catch USD balance
         else:
             return 0
 
@@ -53,6 +55,7 @@ async def log_funding_credits():
     for c in credits:
       result =result + c[FundingCreditModel.AMOUNT] 
       print(c[FundingCreditModel.AMOUNT])
+    print(result)
     return result
 
 async def run():
@@ -75,5 +78,8 @@ async def run():
 while True:
     t = asyncio.ensure_future(run())
     asyncio.get_event_loop().run_until_complete(t)
+
+    localtime = time.localtime(time.time())
+    print ("local time :", localtime)
     print("start funding")
     time.sleep(1200)	
