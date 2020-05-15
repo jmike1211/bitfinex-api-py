@@ -11,11 +11,11 @@ class calRate:
                 if dayhigh["dayhigh"] > 0.001: #40%
                     frrRate = (fundingRate["frr"] + fundingRate["dayhigh"])/2
                 days = 30
-
-            if fundingRate["ask"] < 0.00019: #7%
-                frrRate = 0.00025
-            elif fundingRate["ask"] > 0.0004: #15%
-                frrRate = (fundingRate["frr"] + fundingRate["ask"])/2
+            else:
+                if fundingRate["ask"] < 0.00019: #7%
+                    frrRate = 0.00025
+                elif fundingRate["ask"] > 0.0004: #15%
+                    frrRate = (fundingRate["frr"] + fundingRate["ask"])/2
         except:
             frrRate = 0.00027 #10%
             days = 2

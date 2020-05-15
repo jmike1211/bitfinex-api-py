@@ -45,6 +45,7 @@ async def log_wallets():
     wallets = await bfx.rest.get_wallets()
     for w in wallets:
         if w[0] == "funding" and w[1] == "USD":
+            print(w[2])
             return w[2]#only catch USD balance
         else:
             return 0
@@ -76,7 +77,10 @@ async def run():
     #else:
         #await create_funding(amount, frrRate)
     frrRate, days = calRate.fundingRate()
-    await create_funding(amount, frrRate, days)
+    try:
+        await create_funding(amount, frrRate, days)
+    except:
+        print("wait for moment")
 while True:
     t = asyncio.ensure_future(run())
     asyncio.get_event_loop().run_until_complete(t)
@@ -84,4 +88,4 @@ while True:
     localtime = time.localtime(time.time())
     print ("local time :", localtime)
     print("start funding")
-    time.sleep(1200)	
+    time.sleep(900)	
