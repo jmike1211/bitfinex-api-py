@@ -22,9 +22,9 @@ tbot = telegram.Bot(token)
 
 def SendMessage(text):
     try:
-        tbot.sendMessage("@binfmiketest",text)
+        tbot.sendMessage("@bitfinextest",text)
     except:
-        tbot.sendMessage("@binfmiketest",text)
+        tbot.sendMessage("@bitfinextest",text)
 
 async def return_frr():
     ticker = await bfx.rest.get_public_ticker('fUSD')

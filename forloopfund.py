@@ -47,8 +47,6 @@ async def log_wallets():
         if w[0] == "funding" and w[1] == "USD":
             print(w[2])
             return w[2]#only catch USD balance
-        else:
-            return 0
 
 async def log_funding_credits():
     credits = await bfx.rest.get_funding_credits('fUSD')
@@ -67,7 +65,8 @@ async def run():
     useamount = await log_funding_credits()
 
     frrRate = useMongo().mongofindone({},"frrrate")["frr"]
-    amount = balance - useamount
+    amount = balance - useamount - 100
+    print("balance::",balance,"amount::",amount)
     if amount < 50:
         print("balance not enough")
         return
